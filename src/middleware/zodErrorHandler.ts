@@ -6,6 +6,6 @@ export const zodErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     res.status(400);
     res.send(err);
   } else {
-    next();
+    next(err);
   }
 };

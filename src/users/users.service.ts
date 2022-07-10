@@ -1,21 +1,30 @@
+import bcrypt from 'bcrypt';
+
+import { UserModel } from './models/User';
 import { CreateUserDto } from './dto/create-user.dto';
 
-export const findAll = async () => {
-  return 'return all';
-};
+export default abstract class UserService {
+  static findAll = async () => {
+    const allUsers = await UserModel.find();
+    return allUsers;
+  };
 
-export const findOne = async (id: string) => {
-  return 'return one';
-};
+  static findOne = async (id: string) => {
+    return UserModel.findById(id);
+  };
 
-export const create = async (createUserDto: CreateUserDto) => {
-  return 'create one';
-};
+  static create = async (createUserDto: CreateUserDto) => {
+    const hashedPass = await bcrypt.hash(createUserDto.password, 10);
+    const newUser = new UserModel({ ...createUserDto, password: hashedPass });
+    const user = await newUser.save();
+    return user;
+  };
 
-export const update = async (id: string, updateUserDto: any) => {
-  return 'update one';
-};
+  static update = async (id: string, updateUserDto: any) => {
+    return 'update one';
+  };
 
-export const remove = (id: string) => {
-  return `this will remove ${id} user`;
-};
+  static remove = (id: string) => {
+    return `this will remove ${id} user`;
+  };
+}

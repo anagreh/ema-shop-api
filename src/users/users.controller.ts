@@ -1,23 +1,13 @@
 import { createUserDto } from './dto/create-user.dto';
 import { Router } from 'express';
-import * as userService from './users.service';
-
+import UserService from './users.service';
 export const router = Router();
 
-// Create
-router.post('/', async (req, res, next) => {
-  try {
-    const newUser = createUserDto.parse(req.body);
-    res.send(await userService.create(newUser));
-  } catch (error) {
-    next(error);
-  }
-});
-
+// /api/users
 // Find All
 router.get('/', async (req, res, next) => {
   try {
-    res.send(await userService.findAll());
+    res.send(await UserService.findAll());
   } catch (error) {
     next(error);
   }
@@ -26,8 +16,18 @@ router.get('/', async (req, res, next) => {
 // Find One
 router.get('/:id', async (req, res, next) => {
   try {
-    res.send(await userService.findOne(req.params.id));
+    res.send(await UserService.findOne(req.params.id));
   } catch (error) {
+    next(error);
+  }
+});
+
+// Create
+router.post('/', async (req, res, next) => {
+  try {
+    const newUserDto = createUserDto.parse(req.body);
+    res.send(await UserService.create(newUserDto));
+  } catch (error: any) {
     next(error);
   }
 });
@@ -35,7 +35,7 @@ router.get('/:id', async (req, res, next) => {
 // Update
 router.patch('/:id', async (req, res, next) => {
   try {
-    res.send(await userService.update(req.params.id, req.body));
+    res.send(await UserService.update(req.params.id, req.body));
   } catch (error) {
     next(error);
   }
@@ -44,7 +44,7 @@ router.patch('/:id', async (req, res, next) => {
 // Remove
 router.delete('/:id', async (req, res, next) => {
   try {
-    res.send(userService.remove(req.params.id));
+    res.send(UserService.remove(req.params.id));
   } catch (error) {
     next(error);
   }
